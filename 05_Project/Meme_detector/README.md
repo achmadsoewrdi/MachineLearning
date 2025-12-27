@@ -1,207 +1,88 @@
-# 🐒 Gesture-to-Meme Reaction Detector
+# 🐵 Meme Detector
 
-Aplikasi interaktif berbasis AI yang mendeteksi gerakan tangan dan wajah menggunakan **MediaPipe** dan **OpenCV**. Ketika Anda melakukan gestur tertentu (jempol, menunjuk, atau memegang kepala), aplikasi akan menampilkan gambar reaksi meme monyet yang sesuai!
+Aplikasi web interaktif yang mendeteksi gesture tangan menggunakan AI dan menampilkan meme reaksi yang sesuai.
 
-![Python](https://img.shields.io/badge/Python-3.12-blue)
-![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10.14-green)
-![OpenCV](https://img.shields.io/badge/OpenCV-Latest-red)
-
----
-
-## 🎯 Fitur
-
-- **Deteksi Jempol Up 👍**: Tampilkan meme monyet memberikan jempol
-- **Deteksi Menunjuk ☝️**: Tampilkan meme monyet menunjuk
-- **Deteksi Pegang Kepala 🤦‍♂️**: Tampilkan meme monyet bingung/facepalm
-- **Real-time Detection**: Deteksi gestur secara langsung melalui webcam
-- **Pop-up Reaction**: Meme muncul di jendela terpisah selama 2 detik
-
----
-
-## 📋 Prasyarat
-
-- **Python 3.12** (⚠️ Python 3.13 belum didukung MediaPipe)
-- **Webcam** yang berfungsi
-- **Windows OS** (untuk command yang digunakan)
-
----
-
-## 🛠️ Instalasi
-
-### 1. Clone atau Download Repository
-```bash
-git clone <repository-url>
-cd Meme_detector
-```
-
-### 2. Install Dependencies
-Pastikan Anda menggunakan **Python 3.12**:
-
-```powershell
-py -3.12 -m pip install mediapipe==0.10.14 opencv-python numpy
-```
-
-> **⚠️ Penting**: Gunakan MediaPipe versi **0.10.14** karena versi terbaru (0.10.31) tidak memiliki API `solutions` yang dibutuhkan.
-
-### 3. Verifikasi Instalasi
-```powershell
-py -3.12 -c "import mediapipe as mp; print('MediaPipe version:', mp.__version__)"
-```
-
-Output yang diharapkan: `MediaPipe version: 0.10.14`
-
----
-
-## 🚀 Cara Menjalankan
-
-```powershell
-py -3.12 main.py
-```
-
-### Cara Keluar
-- Tekan **`Esc`** pada keyboard untuk menutup aplikasi
-- Atau tekan **`Ctrl + C`** di terminal
-
----
-
-## 🎮 Cara Menggunakan
-
-1. **Jalankan aplikasi** dengan command di atas
-2. **Posisikan diri** di depan webcam dengan pencahayaan yang cukup
-3. **Lakukan gestur** berikut:
-
-| Gestur | Cara Melakukan | Reaksi Meme |
-|--------|----------------|-------------|
-| **Jempol Up 👍** | Angkat jempol ke atas, jari lain tertutup | Monyet memberikan jempol |
-| **Menunjuk ☝️** | Angkat telunjuk ke atas, jari lain tertutup | Monyet menunjuk |
-| **Pegang Kepala 🤦** | Tangan menyentuh dahi/kepala | Monyet bingung/facepalm |
-
-4. **Meme akan muncul** di jendela terpisah selama 2 detik
-5. Tekan **Esc** untuk keluar
-
----
-
-## 📁 Struktur Proyek
+## 📁 Struktur Projekt
 
 ```
 Meme_detector/
-├── main.py                    # Program utama
-├── assets/                    # Folder gambar reaksi
-│   ├── reaction_thumb.jpg     # Meme jempol
-│   ├── reaction_point.jpg     # Meme menunjuk
-│   └── reaction_head.jpg      # Meme pegang kepala
-└── README.md                  # Dokumentasi ini
+├── backend/          # Express.js API server
+├── frontend/         # React + Tailwind UI
+└── main.py          # Python ML model (gesture detection)
 ```
 
----
+## 🚀 Quick Start
 
-## ⚙️ Cara Kerja (Technical)
+### Backend Setup
 
-### Deteksi Gestur dengan MediaPipe
-
-Aplikasi menggunakan **MediaPipe Hands** dan **MediaPipe Face Mesh** untuk mendeteksi landmark (titik kunci) pada tangan dan wajah.
-
-#### 1. Jempol Up
-```python
-# Logika: Ujung jempol (landmark 4) lebih tinggi dari sendi (landmark 3)
-# DAN jari lainnya tertutup
-if thumb_tip.y < thumb_ip.y and all_fingers_closed:
-    show_meme("reaction_thumb.jpg")
+```bash
+cd backend
+npm install
+npm start
 ```
 
-#### 2. Menunjuk
-```python
-# Logika: Ujung telunjuk (landmark 8) lebih tinggi dari sendi (landmark 6)
-# DAN jari lainnya tertutup
-if index_tip.y < index_pip.y and other_fingers_closed:
-    show_meme("reaction_point.jpg")
+Server akan berjalan di `http://localhost:5000`
+
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-#### 3. Pegang Kepala
-```python
-# Logika: Koordinat Y tangan <= koordinat Y dahi (face landmark 10)
-if hand_y <= forehead_y:
-    show_meme("reaction_head.jpg")
-```
+Frontend akan berjalan di `http://localhost:5173`
 
----
+## 🛠️ Tech Stack
 
-## ❓ Troubleshooting
+### Backend
+- **Express.js** - Web framework
+- **Multer** - File upload handling
+- **CORS** - Cross-origin resource sharing
 
-### Error: `AttributeError: module 'mediapipe' has no attribute 'solutions'`
-**Penyebab**: MediaPipe versi terbaru (0.10.31) tidak memiliki API `solutions`.
+### Frontend
+- **React** - UI library
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **react-webcam** - Webcam integration
+- **Axios** - HTTP client
 
-**Solusi**:
-```powershell
-py -3.12 -m pip uninstall mediapipe -y
-py -3.12 -m pip install mediapipe==0.10.14
-```
+### Machine Learning
+- **MediaPipe** - Gesture detection
+- **OpenCV** - Image processing
+- **Python** - ML model
 
-### Error: `python: command not found` atau masih error
-**Penyebab**: Menggunakan Python 3.13 atau versi default yang salah.
+## 📝 Features
 
-**Solusi**: Pastikan menggunakan `py -3.12` bukan `python`:
-```powershell
-py -3.12 main.py
-```
+- 📸 Real-time webcam capture
+- 🤖 AI-powered gesture detection
+- 🎨 Modern, responsive UI
+- 🐵 Meme reactions based on detected gestures
 
-### Gestur tidak terdeteksi
-- ✅ Pastikan ruangan **cukup terang**
-- ✅ Posisikan tangan **jelas terlihat** di depan kamera
-- ✅ Jangan terlalu dekat atau jauh dari kamera
-- ✅ Lakukan gestur dengan **jelas dan stabil**
+## 🎯 Supported Gestures
 
-### Webcam tidak terbuka
-- ✅ Pastikan webcam tidak digunakan aplikasi lain
-- ✅ Cek izin akses kamera di Windows Settings
-- ✅ Restart aplikasi
+- 👍 Thumbs Up
+- 👉 Pointing
+- 🤔 Touching Head
 
----
+## 📖 Documentation
 
-## 🔧 Kustomisasi
+Lihat README di masing-masing folder untuk detail lebih lanjut:
+- [Backend README](./backend/README.md)
+- [Frontend README](./frontend/README.md)
 
-### Mengganti Gambar Meme
-Ganti file di folder `assets/` dengan gambar Anda sendiri (format `.jpg` atau `.png`):
-- `reaction_thumb.jpg` - Meme untuk jempol
-- `reaction_point.jpg` - Meme untuk menunjuk
-- `reaction_head.jpg` - Meme untuk pegang kepala
+## 🔧 Development
 
-### Mengubah Durasi Tampilan Meme
-Edit variabel `REACTION_DURATION` di `main.py`:
-```python
-REACTION_DURATION = 2.0  # Ubah angka ini (dalam detik)
-```
+1. Jalankan backend server terlebih dahulu
+2. Jalankan frontend development server
+3. Buka browser di `http://localhost:5173`
+4. Izinkan akses webcam
+5. Ambil foto dan deteksi gesture!
 
----
+## 📦 Portfolio Ready
 
-## 🧪 Requirements
-
-```
-mediapipe==0.10.14
-opencv-python>=4.8.0
-numpy>=1.24.0
-```
-
----
-
-## 📝 Lisensi
-
-Proyek ini dibuat untuk tujuan edukasi dan pembelajaran AI/Computer Vision.
-
----
-
-## 👨‍💻 Kontributor
-
-Dibuat dengan ❤️ menggunakan MediaPipe dan OpenCV
-
----
-
-## 🙏 Acknowledgments
-
-- [MediaPipe](https://mediapipe.dev/) - Framework untuk ML solutions
-- [OpenCV](https://opencv.org/) - Library Computer Vision
-- [NumPy](https://numpy.org/) - Scientific computing
-
----
-
-**Selamat mencoba! 🎉**
+Proyek ini siap untuk digunakan sebagai portfolio dengan:
+- Clean code structure
+- Modern tech stack
+- Professional UI/UX
+- Full-stack implementation
